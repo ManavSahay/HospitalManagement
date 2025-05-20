@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +13,7 @@ import com.hospital.HospitalManagementSystem.connection.GetConnection;
 import com.hospital.HospitalManagementSystem.connection.GetConnectionImpl;
 import com.hospital.HospitalManagementSystem.model.Patient;
 import com.hospital.HospitalManagementSystem.model.address.Address;
+import com.hospital.HospitalManagementSystem.model.treatment.Treatment;
 import com.hospital.HospitalManagementSystem.model.user.User;
 import com.hospital.HospitalManagementSystem.model.user.UserImpl;
 import com.hospital.HospitalManagementSystem.service.doctor.DoctorDAO;
@@ -94,10 +96,49 @@ public class PatientDAOImpl implements PatientDAO {
 		
 		return updatedRows;
 	}
+	
+	@Override
+	public int update(String patientId) {
+		int updatedRows = 0;
+		
+		String sql = "update patient set assigned_doctor_id=? where patient_id=?";
+		
+		try {
+			PreparedStatement ps = con.prepareStatement(sql);
+			ps.setNull(1, Types.NULL);
+			ps.setString(2, patientId);
+			
+			updatedRows = ps.executeUpdate();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return updatedRows;
+	}
+	
+	@Override
+	public int assignDoctor(Treatment treatment) {
+		int updatedRows = 0;
+		
+		String sql = "update patient set assigned_doctor_id=? where patient_id=?";
+		
+		try {
+			PreparedStatement ps = con.prepareStatement(sql);
+			ps.setString(1, treatment.getDoctor_id());
+			ps.setString(2, treatment.getPatient_id());
+			
+			updatedRows = ps.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return updatedRows;
+	}
 
 	@Override
 	public Patient getPatient(String patientId) {
-		Patient patient = new Patient();
+		Patient patient = null;
 		
 		String sql = "select * from patient where patient_id=?";
 		
@@ -108,6 +149,7 @@ public class PatientDAOImpl implements PatientDAO {
 			ResultSet rs = ps.executeQuery();
 
 			if (rs.next()) {
+				patient = new Patient();
 				String userName = rs.getString("patient_name");
 				String address = rs.getString("patient_address");
 				String disease= rs.getString("disease");

@@ -4,12 +4,15 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.hospital.HospitalManagementSystem.connection.GetConnection;
 import com.hospital.HospitalManagementSystem.connection.GetConnectionImpl;
 import com.hospital.HospitalManagementSystem.model.treatment.Treatment;
+import com.hospital.HospitalManagementSystem.service.patient.PatientDAO;
+import com.hospital.HospitalManagementSystem.service.patient.PatientDAOImpl;
 
 public class TreatmentDAOImpl implements TreatmentDAO {
 	private Connection con = getConnection();
@@ -46,18 +49,64 @@ public class TreatmentDAOImpl implements TreatmentDAO {
 		
 		// Treatment status is 'O' -> Ongoing when the treatment is in progress and 'D' -> Done when the treatment is completer.
 		String sql = "update treatment set treatment_status='D' where patient_id=?";
+		String patientUpdate = "update patient set assigned_doctor_id=? where patient_id=?";
 		
 		try {
 			PreparedStatement ps = con.prepareStatement(sql);
 			ps.setString(1, treatment.getPatient_id());
 			
 			updatedRows = ps.executeUpdate();
+
+			ps = con.prepareStatement(patientUpdate);
+			ps.setNull(1, Types.NULL);
+			ps.setString(2, treatment.getPatient_id());
+			
+			updatedRows += ps.executeUpdate();
+			
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		
 		return updatedRows;
+	}
+	
+	@Override
+	public int delete(Treatment treatment) {
+		int deletedRows = 0;
+		
+		String sql = "delete from treatment where patient_id=? and doctor_id=?";
+		
+		try {
+			PreparedStatement ps = con.prepareStatement(sql);
+			ps.setString(1, treatment.getDoctor_id());
+			ps.setString(2, treatment.getPatient_id());
+			
+			deletedRows = ps.executeUpdate();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return deletedRows;
+	}
+	
+	@Override
+	public int deleteAllTreatments(String doctorId) {
+		int deletedRows = 0;
+		
+		String sql = "delete from treatment where doctor_id=?";
+		
+		try {
+			PreparedStatement ps = con.prepareStatement(sql);
+			ps.setString(1, doctorId);
+			
+			deletedRows = ps.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return deletedRows;
 	}
 
 	@Override

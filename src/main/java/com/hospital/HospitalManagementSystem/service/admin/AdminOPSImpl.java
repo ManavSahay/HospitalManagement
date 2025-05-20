@@ -28,7 +28,8 @@ public class AdminOPSImpl implements AdminOPS {
 
 	@Override
 	public int addPatient(Patient patient, String password) {
-		return patientDao.insert(patient) + userAuthDao.insert(new UserAuth(patient.getUser().getUserId(), password));
+		return patientDao.insert(patient) + userAuthDao.insert(new UserAuth(patient.getUser().getUserId(), password))
+				+ treatmentDao.insert(new Treatment(patient.getAssignedDoctor().getUser().getUserId(), patient.getUser().getUserId(), "O"));
 	}
 
 	@Override
@@ -43,12 +44,17 @@ public class AdminOPSImpl implements AdminOPS {
 
 	@Override
 	public int deleteDoctor(String doctorId) {
-		return doctorDao.delete(doctorId) + userAuthDao.delete(doctorId);
+		return patientDao.getAllPatients().stream()
+				.filter(o -> o.getAssignedDoctor() != null && o.getAssignedDoctor().getUser().getUserId().equals(doctorId))
+				.map(o -> patientDao.update(o.getUser().getUserId()))
+				.reduce(0, (a, b) -> a + b) + treatmentDao.deleteAllTreatments(doctorId)
+				+ doctorDao.delete(doctorId) + userAuthDao.delete(doctorId);
 	}
 
 	@Override
 	public int deletePatient(String patientId) {
-		return patientDao.delete(patientId) + userAuthDao.delete(patientId);
+		return treatmentDao.delete(new Treatment(patientId, patientDao.getPatient(patientId).getAssignedDoctor().getUser().getUserId(), "")) + 
+				patientDao.delete(patientId) + userAuthDao.delete(patientId);
 	}
 
 	@Override
@@ -70,35 +76,36 @@ public class AdminOPSImpl implements AdminOPS {
 	public List<Patient> getAllPatients() {
 		return patientDao.getAllPatients();
 	}
-	
+
 	@Override
 	public void assignDoctor(Treatment treatment) {
+		patientDao.assignDoctor(treatment);
 		treatmentDao.insert(treatment);
 	}
-	
+
 	@Override
 	public List<Treatment> getTreatments(String doctorId) {
 		return treatmentDao.getTreatments(doctorId);
 	}
-	
+
 	@Override
 	public List<Treatment> getAllTreatments() {
 		return treatmentDao.getAllTreatments();
 	}
-	
+
 	@Override
 	public List<UserAuth> checkUsers() {
 		return userAuthDao.getAllUserAuths();
 	}
-	
+
 	@Override
 	public UserAuth checkUser(String userId) {
 		return userAuthDao.getUserAuth(userId);
 	}
-	
+
 	@Override
 	public boolean changeUserPassword(UserAuth userAuth) {
 		return userAuthDao.update(userAuth) != 0 ? true : false;
 	}
-	
+
 }

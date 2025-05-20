@@ -94,7 +94,7 @@ public class DoctorDAOImpl implements DoctorDAO {
 
 	@Override
 	public Doctor getDoctor(String doctorId) {
-		Doctor doctor = new Doctor();
+		Doctor doctor = null;
 
 		String sql = "select * from doctor where doctor_id=?";
 
@@ -105,6 +105,7 @@ public class DoctorDAOImpl implements DoctorDAO {
 			ResultSet rs = ps.executeQuery();
 
 			if (rs.next()) {
+				doctor = new Doctor();
 				String userName = rs.getString("doctor_name");
 				String address = rs.getString("doctor_address");
 				String department = rs.getString("department");

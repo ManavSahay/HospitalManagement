@@ -89,10 +89,10 @@ public class AdminPanel extends ChangePassword implements Execute {
 
 				System.out.println("Enter Doctor's Department:");
 				String department = sc.nextLine();
-				
+
 				System.out.println("Enter Doctor's Experience:");
 				int experience = sc.nextInt();
-				
+
 				sc.nextLine();
 
 				System.out.println("Enter the password:");
@@ -196,10 +196,10 @@ public class AdminPanel extends ChangePassword implements Execute {
 			} else if (choice == 5) {
 				System.out.println("Enter the Doctor ID to be deleted:");
 				String doctorId = sc.nextLine();
-								
+
 				int deletedRows = adminOps.deleteDoctor(doctorId);
-				
-				if (deletedRows != 2) {
+
+				if (deletedRows == 0) {
 					System.out.println("Some error occured!");
 					System.out.println("Please check the entries and try again");
 				} else {
@@ -208,10 +208,10 @@ public class AdminPanel extends ChangePassword implements Execute {
 			} else if (choice == 6) {
 				System.out.println("Enter Patient ID to be deleted:");
 				String patientId = sc.nextLine();
-				
+
 				int deletedRows = adminOps.deletePatient(patientId);
-				
-				if (deletedRows != 2) {
+
+				if (deletedRows != 3) {
 					System.out.println("Some error occured!");
 					System.out.println("Please check the entries and try again");
 				} else {
@@ -220,9 +220,9 @@ public class AdminPanel extends ChangePassword implements Execute {
 			} else if (choice == 7) {
 				System.out.println("Enter Doctor ID to search:");
 				String doctorId = sc.nextLine();
-				
+
 				Doctor doctor = adminOps.getDoctor(doctorId);
-				
+
 				if (doctor != null) {
 					System.out.println("Doctor's ID: " + doctor.getUser().getUserId());
 					System.out.println("Doctor's Name: " + doctor.getUser().getUserName());
@@ -230,81 +230,83 @@ public class AdminPanel extends ChangePassword implements Execute {
 					System.out.println("Doctor's Department: " + doctor.getDepartment());
 					System.out.println("Doctor's Experience: " + doctor.getExperience());
 					List<String> patientsTreatedId = adminOps.getTreatments(doctorId).stream()
-							.map(o -> o.getPatient_id())
-							.collect(Collectors.toList());
+							.map(o -> o.getPatient_id()).collect(Collectors.toList());
 					System.out.println("Patients Treated ID: " + patientsTreatedId);
 				} else {
 					System.out.println("Doctor Not Found");
 				}
-				
+
 			} else if (choice == 8) {
 				List<Doctor> doctors = adminOps.getAllDoctors();
-				
+
 				if (doctors.isEmpty()) {
 					System.out.println("No Doctors found");
 					continue;
 				}
-				
-				for (Doctor doctor: doctors) {
+
+				for (Doctor doctor : doctors) {
 					System.out.println("Doctor's ID: " + doctor.getUser().getUserId());
 					System.out.println("Doctor's Name: " + doctor.getUser().getUserName());
 					System.out.println("Doctor's Address: " + doctor.getUser().getUserAddress().toString());
 					System.out.println("Doctor's Department: " + doctor.getDepartment());
 					System.out.println("Doctor's Experience: " + doctor.getExperience());
 					List<String> patientsTreatedId = adminOps.getTreatments(doctor.getUser().getUserId()).stream()
-							.map(o -> o.getPatient_id())
-							.collect(Collectors.toList());
+							.map(o -> o.getPatient_id()).collect(Collectors.toList());
 					System.out.println("Patients Treated ID: " + patientsTreatedId);
 				}
 			} else if (choice == 9) {
 				System.out.println("Enter Patient ID to search:");
 				String patientId = sc.nextLine();
-				
+
 				Patient patient = adminOps.getPatient(patientId);
-				
+
 				if (patient != null) {
 					System.out.println("Patient's ID: " + patient.getUser().getUserId());
 					System.out.println("Patient's Name: " + patient.getUser().getUserName());
 					System.out.println("Patient's Address: " + patient.getUser().getUserAddress().toString());
 					System.out.println("Patient's Disease: " + patient.getDisease());
-					System.out.println("Patient's Assigned Doctor: " + patient.getAssignedDoctor());
+					System.out.println("Patient's Assigned Doctor: " + (patient.getAssignedDoctor() != null
+							? patient.getAssignedDoctor().getUser().getUserId()
+							: "No doctor Assigned"));
 				} else {
 					System.out.println("Patient not found");
 				}
 			} else if (choice == 10) {
 				List<Patient> patients = adminOps.getAllPatients();
-				
+
 				if (patients.isEmpty()) {
 					System.out.println("No Patients found");
 					continue;
 				}
-				
-				for (Patient patient: patients) {
+
+				for (Patient patient : patients) {
 					System.out.println("Patient's ID: " + patient.getUser().getUserId());
 					System.out.println("Patient's Name: " + patient.getUser().getUserName());
 					System.out.println("Patient's Address: " + patient.getUser().getUserAddress().toString());
 					System.out.println("Patient's Disease: " + patient.getDisease());
-					System.out.println("Patient's Assigned Doctor: " + patient.getAssignedDoctor().getUser().getUserId());
+					System.out.println("Patient's Assigned Doctor: " + (patient.getAssignedDoctor() != null
+							? patient.getAssignedDoctor().getUser().getUserId()
+							: "No doctor Assigned"));
 				}
 			} else if (choice == 11) {
 				System.out.println("Enter Doctor ID:");
 				String doctorId = sc.nextLine();
-				
+
 				System.out.println("Enter Patient ID:");
 				String patientId = sc.nextLine();
-				
+
 				adminOps.assignDoctor(new Treatment(doctorId, patientId, "O"));
-				
+
 				System.out.println("Doctor Assigned");
 			} else if (choice == 12) {
 				List<Treatment> treatments = adminOps.getAllTreatments();
-				
+
 				if (treatments.isEmpty()) {
 					System.out.println("No treatments available");
 					continue;
 				}
-				
-				for (Treatment treatment: treatments) {
+
+				for (Treatment treatment : treatments) {
 					System.out.println("Treatment ID: " + treatment.getTreatmentId());
 					System.out.println("Doctor ID: " + treatment.getDoctor_id());
 					System.out.println("Patient ID: " + treatment.getPatient_id());
@@ -312,22 +314,22 @@ public class AdminPanel extends ChangePassword implements Execute {
 				}
 			} else if (choice == 13) {
 				List<UserAuth> users = adminOps.checkUsers();
-				
+
 				if (users.isEmpty()) {
 					System.out.println("No users available");
 					continue;
 				}
-				
-				for (UserAuth user: users) {
+
+				for (UserAuth user : users) {
 					System.out.println("User ID: " + user.getUserId());
 					System.out.println("Password: " + user.getPassword());
 				}
 			} else if (choice == 14) {
 				System.out.println("Enter User ID: ");
 				String userId = sc.nextLine();
-				
+
 				UserAuth user = adminOps.checkUser(userId);
-				
+
 				if (user != null) {
 					System.out.println("User ID: " + user.getUserId());
 					System.out.println("Password: " + user.getPassword());
@@ -337,19 +339,19 @@ public class AdminPanel extends ChangePassword implements Execute {
 			} else if (choice == 15) {
 				System.out.println("Enter User ID: ");
 				String userId = sc.nextLine();
-				
+
 				System.out.println("Enter New Password");
 				String password = sc.nextLine();
-				
+
 				adminOps.changeUserPassword(new UserAuth(userId, password));
-				
+
 				System.out.println(userId + "'s password changed");
 			} else if (choice == 16) {
 				System.out.println("Enter your new password:");
 				String password = sc.nextLine();
-				
+
 				UserAuth userAuth = new UserAuth(this.admin.getUser().getUserId(), this.admin.getAdminPassword());
-				
+
 				if (changePassword(userAuth, password)) {
 					System.out.println("Password changed");
 				} else {
