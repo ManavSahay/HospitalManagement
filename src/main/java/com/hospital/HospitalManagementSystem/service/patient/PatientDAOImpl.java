@@ -31,6 +31,10 @@ public class PatientDAOImpl implements PatientDAO {
 	public int insert(Patient patient) {
 		int affectedRows = 0;
 		
+		if (!patient.getUser().getUserId().substring(0, 3).equals("PTN")) {
+			return 0;
+		}
+		
 		String sql = "insert into patient (patient_id, patient_name, patient_address, disease, assigned_doctor_id) values(?, ?, ?, ?, ?)";
 		
 		try {

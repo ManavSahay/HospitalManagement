@@ -26,6 +26,10 @@ public class DoctorDAOImpl implements DoctorDAO {
 	@Override
 	public int insert(Doctor doctor) {
 		int affectedRows = 0;
+		
+		if (!doctor.getUser().getUserId().substring(0, 3).equals("DOC")) {
+			return 0;
+		}
 
 		String sql = "insert into doctor(doctor_id, doctor_name, doctor_address, department, experience) values(?, ?, ?, ?, ?)";
 

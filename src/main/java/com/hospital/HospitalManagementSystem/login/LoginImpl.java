@@ -118,7 +118,7 @@ public class LoginImpl implements Login {
 				e.printStackTrace();
 				return null;
 			}
-		} else {
+		} else if (type.equals("PTN")) {
 			sql = "select * from patient where patient_id=?";
 			DoctorDAO doctorDao = new DoctorDAOImpl();
 
