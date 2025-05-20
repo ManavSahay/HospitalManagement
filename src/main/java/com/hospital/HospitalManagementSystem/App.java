@@ -16,13 +16,19 @@ public class App {
     	boolean exit = false;
     	int choice = -1;
     	
-        System.out.println("Welcome to the Hospital");
+        System.out.println("-----Welcome to the Hospital-----");
         
         do {
         	System.out.println("1. Login");
         	System.out.println("2. Exit the Application");
         	System.out.println("Enter your choice:");
-    		choice = sc.nextInt(); 		        		
+        	if (sc.hasNextInt()) {
+        		choice = sc.nextInt(); 		        		        		
+        	} else {
+        		System.err.println("Enter a number!");
+        		sc.nextLine();
+        		continue;
+        	}
         	
         	sc.nextLine();
         	
