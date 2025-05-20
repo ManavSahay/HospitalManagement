@@ -23,7 +23,7 @@ public class App {
         	System.out.println("2. Exit the Application");
         	System.out.println("Enter your choice:");
     		choice = sc.nextInt(); 		        		
-        	        	
+        	
         	sc.nextLine();
         	
         	if (choice == 1) {

@@ -7,11 +7,10 @@ import com.hospital.HospitalManagementSystem.model.Patient;
 import com.hospital.HospitalManagementSystem.model.user.userAuth.UserAuth;
 import com.hospital.HospitalManagementSystem.panel.changepassword.ChangePassword;
 import com.hospital.HospitalManagementSystem.panel.execute.Execute;
-import com.hospital.HospitalManagementSystem.service.doctor.DoctorDAO;
-import com.hospital.HospitalManagementSystem.service.doctor.DoctorDAOImpl;
 
 public class PatientPanel extends ChangePassword implements Execute {
 	private Patient patient;
+	private Scanner sc = new Scanner(System.in);
 	
 	public Patient getPatient() {
 		return patient;
@@ -27,7 +26,6 @@ public class PatientPanel extends ChangePassword implements Execute {
 
 	@Override
 	public void execute() {
-		Scanner sc = new Scanner(System.in);
 		
 		System.out.println("Hello Patient " + patient.getUser().getUserName());
 		
@@ -54,6 +52,11 @@ public class PatientPanel extends ChangePassword implements Execute {
 				System.out.println("Patient's Assigned Doctor: " + patient.getAssignedDoctor().getUser().getUserId());
 			} else if (choice == 2) {
 				Doctor doctor = patient.getAssignedDoctor();
+				
+				if (doctor == null) {
+					System.out.println("No doctor assigned");
+					return;
+				}
 				
 				System.out.println("Doctor's ID: " + doctor.getUser().getUserId());
 				System.out.println("Doctor's Name: " + doctor.getUser().getUserName());

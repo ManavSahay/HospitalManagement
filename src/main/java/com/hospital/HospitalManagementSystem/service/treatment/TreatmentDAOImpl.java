@@ -11,8 +11,6 @@ import java.util.List;
 import com.hospital.HospitalManagementSystem.connection.GetConnection;
 import com.hospital.HospitalManagementSystem.connection.GetConnectionImpl;
 import com.hospital.HospitalManagementSystem.model.treatment.Treatment;
-import com.hospital.HospitalManagementSystem.service.patient.PatientDAO;
-import com.hospital.HospitalManagementSystem.service.patient.PatientDAOImpl;
 
 public class TreatmentDAOImpl implements TreatmentDAO {
 	private Connection con = getConnection();

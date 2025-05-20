@@ -16,6 +16,7 @@ import com.hospital.HospitalManagementSystem.service.admin.AdminOPS;
 import com.hospital.HospitalManagementSystem.service.admin.AdminOPSImpl;
 
 public class AdminPanel extends ChangePassword implements Execute {
+	private Scanner sc = new Scanner(System.in);
 	private Admin admin;
 	private AdminOPS adminOps;
 
@@ -44,8 +45,6 @@ public class AdminPanel extends ChangePassword implements Execute {
 
 	@Override
 	public void execute() {
-		Scanner sc = new Scanner(System.in);
-
 		System.out.println("Hello Admin " + admin.getUser().getUserName());
 
 		System.out.println("What would you like to do?");

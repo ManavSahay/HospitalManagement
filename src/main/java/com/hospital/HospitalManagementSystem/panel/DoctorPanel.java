@@ -17,6 +17,7 @@ import com.hospital.HospitalManagementSystem.service.treatment.TreatmentDAO;
 import com.hospital.HospitalManagementSystem.service.treatment.TreatmentDAOImpl;
 
 public class DoctorPanel extends ChangePassword implements Execute {
+	private Scanner sc = new Scanner(System.in);
 	private Doctor doctor;
 	private TreatmentDAO treatmentDao;
 	private PatientDAO patientDao;
@@ -34,9 +35,7 @@ public class DoctorPanel extends ChangePassword implements Execute {
 	}
 
 	@Override
-	public void execute() {
-		Scanner sc = new Scanner(System.in);
-		
+	public void execute() {		
 		System.out.println("Hello Doctor " + doctor.getUser().getUserName());
 		
 		System.out.println("What would you like to do?");
